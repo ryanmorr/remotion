@@ -1,18 +1,18 @@
 {
-  "name": "@ryanmorr/remove-element",
+  "name": "@ryanmorr/remotion",
   "description": "Transition an element out before removing it from the DOM",
   "version": "0.1.0",
   "license": "Unlicense",
   "author": "Ryan Morr",
-  "homepage": "https://github.com/ryanmorr/remove-element",
-  "repository": "github:ryanmorr/remove-element",
-  "bugs": "https://github.com/ryanmorr/remove-element/issues",
+  "homepage": "https://github.com/ryanmorr/remotion",
+  "repository": "github:ryanmorr/remotion",
+  "bugs": "https://github.com/ryanmorr/remotion/issues",
   "publishConfig": {
     "access": "public"
   },
-  "main": "dist/remove-element.cjs.js",
-  "module": "dist/remove-element.esm.js",
-  "browser": "dist/remove-element.umd.js",
+  "main": "dist/remotion.cjs.js",
+  "module": "dist/remotion.esm.js",
+  "browser": "dist/remotion.umd.js",
   "scripts": {
     "lint": "./node_modules/.bin/eslint src/** test/specs/**",
     "test": "karma start karma.config.js",

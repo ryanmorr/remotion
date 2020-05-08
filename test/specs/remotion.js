@@ -1,6 +1,6 @@
-import removeElement from '../../src/remove-element';
+import remotion from '../../src/remotion';
 
-describe('remove-element', () => {
+describe('remotion', () => {
     function createStyle(css) {
         const style = document.createElement('style');
         style.classList.add('test-css');
@@ -29,7 +29,7 @@ describe('remove-element', () => {
         const addEventSpy = sinon.spy(element, 'addEventListener');
         const removeEventSpy = sinon.spy(element, 'removeEventListener');
 
-        const promise = removeElement(element, 'fade-out');
+        const promise = remotion(element, 'fade-out');
 
         expect(promise).to.be.a('promise');
         expect(element.classList.contains('fade-out')).to.equal(true);
@@ -66,7 +66,7 @@ describe('remove-element', () => {
         element.classList.add('foo');
         document.body.appendChild(element);
 
-        removeElement('.foo', 'fade-out').then((el) => {
+        remotion('.foo', 'fade-out').then((el) => {
             expect(document.contains(element)).to.equal(false);
             done();
         });
@@ -79,7 +79,7 @@ describe('remove-element', () => {
         element.classList.add('foo');
         document.body.appendChild(element);
 
-       const promise = removeElement(element, () => 'fade-out');
+       const promise = remotion(element, () => 'fade-out');
 
         expect(element.classList.contains('fade-out')).to.equal(true);
         

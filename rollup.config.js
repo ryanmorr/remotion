@@ -7,11 +7,11 @@ import minify from 'rollup-plugin-babel-minify';
 const banner = `/*! ${pkg.name} v${pkg.version} | ${pkg.homepage} */`;
 
 export default {
-    input: 'src/remove-element.js',
+    input: 'src/remotion.js',
     output: [
         {
             banner,
-            name: 'removeElement',
+            name: 'remotion',
             file: pkg.browser,
             format: 'umd'
         },

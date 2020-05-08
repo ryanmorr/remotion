@@ -1,4 +1,4 @@
-export default function removeElement(element, className) {
+export default function remotion(element, className) {
     if (typeof element === 'string') {
         element = document.querySelector(element);
     }
