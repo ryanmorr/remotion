@@ -66,7 +66,7 @@ describe('remotion', () => {
         element.classList.add('foo');
         document.body.appendChild(element);
 
-        remotion('.foo', 'fade-out').then((el) => {
+        remotion('.foo', 'fade-out').then(() => {
             expect(document.contains(element)).to.equal(false);
             done();
         });
@@ -79,11 +79,14 @@ describe('remotion', () => {
         element.classList.add('foo');
         document.body.appendChild(element);
 
-       const promise = remotion(element, () => 'fade-out');
+       const promise = remotion(element, (el) => {
+           expect(el).to.equal(element);
+           return 'fade-out';
+       });
 
         expect(element.classList.contains('fade-out')).to.equal(true);
         
-        promise.then((el) => {
+        promise.then(() => {
             expect(document.contains(element)).to.equal(false);
             done();
         });
