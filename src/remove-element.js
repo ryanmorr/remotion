@@ -1,4 +1,7 @@
 export default function removeElement(element, className) {
+    if (typeof element === 'string') {
+        element = document.querySelector(element);
+    }
     return new Promise((resolve) => {
         const onEnd = () => {
             element.classList.remove(className);

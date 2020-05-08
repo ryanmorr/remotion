@@ -49,4 +49,28 @@ describe('remove-element', () => {
 
         element.dispatchEvent(new Event('transitionend'));
     });
+
+    it('should support selector strings', (done) => {
+        createStyle(`
+            .foo {
+                opacity: 1;
+                transition: opacity 0.5s ease-out;
+            }
+            
+            .fade-out {
+                opacity: 0;
+            }
+        `);
+
+        const element = document.createElement('div');
+        element.classList.add('foo');
+        document.body.appendChild(element);
+
+        removeElement('.foo', 'fade-out').then((el) => {
+            expect(document.contains(element)).to.equal(false);
+            done();
+        });
+
+        element.dispatchEvent(new Event('transitionend'));
+    });
 });
