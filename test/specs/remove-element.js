@@ -73,4 +73,21 @@ describe('remove-element', () => {
 
         element.dispatchEvent(new Event('transitionend'));
     });
+
+    it('should support a function as a second argument that returns a class name', (done) => {
+        const element = document.createElement('div');
+        element.classList.add('foo');
+        document.body.appendChild(element);
+
+       const promise = removeElement(element, () => 'fade-out');
+
+        expect(element.classList.contains('fade-out')).to.equal(true);
+        
+        promise.then((el) => {
+            expect(document.contains(element)).to.equal(false);
+            done();
+        });
+
+        element.dispatchEvent(new Event('transitionend'));
+    });
 });
