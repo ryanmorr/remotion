@@ -58,24 +58,6 @@ describe('remotion', () => {
         element.dispatchEvent(new Event('transitionend'));
     });
 
-    it('should support a function as a second argument that returns a class name', (done) => {
-        element.classList.add('transition-fade');
-
-        const promise = remotion(element, (el) => {
-            expect(el).to.equal(element);
-            return 'transition-fade-out';
-        });
-
-        expect(element.classList.contains('transition-fade-out')).to.equal(true);
-        
-        promise.then(() => {
-            expect(document.contains(element)).to.equal(false);
-            done();
-        });
-
-        element.dispatchEvent(new Event('transitionend'));
-    });
-
     it('should remove the element when a transition is canceled', (done) => {
         element.classList.add('transition-fade');
 
@@ -103,5 +85,38 @@ describe('remotion', () => {
         });
 
         element.dispatchEvent(new Event('animationcancel'));
+    });
+
+    it('should support a callback function as a second argument that returns a class name', (done) => {
+        element.classList.add('transition-fade');
+
+        const promise = remotion(element, (el) => {
+            expect(el).to.equal(element);
+            return 'transition-fade-out';
+        });
+
+        expect(element.classList.contains('transition-fade-out')).to.equal(true);
+        
+        promise.then(() => {
+            expect(document.contains(element)).to.equal(false);
+            done();
+        });
+
+        element.dispatchEvent(new Event('transitionend'));
+    });
+
+    it('should support a second parameter to the callback function to customize when an element is removed', (done) => {
+        const promise = remotion(element, (el, done) => {
+            expect(done).to.be.a('function');
+            setTimeout(done, 1000);
+        });
+
+        expect(document.contains(element)).to.equal(true);
+        
+        promise.then((el) => {
+            expect(el).to.equal(element);
+            expect(document.contains(element)).to.equal(false);
+            done();
+        });
     });
 });

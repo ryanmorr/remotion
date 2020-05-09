@@ -3,6 +3,12 @@ export default function remotion(element, className) {
         element = document.querySelector(element);
     }
     if (typeof className === 'function') {
+        if (className.length === 2) {
+            return new Promise((resolve) => className(element, () => {
+                element.remove();
+                resolve(element);
+            }));
+        }
         className = className(element);
     }
     return new Promise((resolve) => {
