@@ -12,6 +12,15 @@ describe('remotion', () => {
         .transition-fade-out {
             opacity: 0;
         }
+
+        @keyframes animation-fade-out {
+            from { opacity: 1}
+            to { opacity: 0 }
+        }
+        
+        .animation-fade-out {
+            animation: animation-fade-out 0.5s ease-out;
+        }
     `;
     document.head.appendChild(style);
 
@@ -69,12 +78,30 @@ describe('remotion', () => {
 
     it('should remove the element when a transition is canceled', (done) => {
         element.classList.add('transition-fade');
-        
+
         remotion(element, 'transition-fade-out').then(() => {
             expect(document.contains(element)).to.equal(false);
             done();
         });
 
         element.dispatchEvent(new Event('transitioncancel'));
+    });
+
+    it('should animate an element before removing it from the DOM', (done) => {
+        remotion(element, 'animation-fade-out').then(() => {
+            expect(document.contains(element)).to.equal(false);
+            done();
+        });
+
+        element.dispatchEvent(new Event('animationend'));
+    });
+
+    it('should remove the element when an animation is canceled', (done) => {
+        remotion(element, 'animation-fade-out').then(() => {
+            expect(document.contains(element)).to.equal(false);
+            done();
+        });
+
+        element.dispatchEvent(new Event('animationcancel'));
     });
 });
