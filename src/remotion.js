@@ -26,5 +26,6 @@ export default function remotion(element, className) {
         element.addEventListener('animationend', onEnd);
         element.addEventListener('animationcancel', onEnd);
         element.classList.add(className);
+        void element.offsetWidth;
     });
 }
