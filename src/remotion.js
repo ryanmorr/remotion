@@ -1,7 +1,4 @@
-export default function remotion(element, className) {
-    if (typeof element === 'string') {
-        element = document.querySelector(element);
-    }
+function removeElement(element, className) {
     if (typeof className === 'function') {
         if (className.length === 2) {
             return new Promise((resolve) => className(element, () => {
@@ -25,4 +22,21 @@ export default function remotion(element, className) {
         element.classList.add(className);
         void element.offsetWidth;
     });
+}
+
+export default function remotion(element, className) {
+    if (typeof element === 'string') {
+        element = document.querySelectorAll(element);
+    }
+    if (typeof element.length === 'number') {
+        if (element.length === 1) {
+            return removeElement(element[0], className);
+        }
+        const promises = [];
+        element.forEach((el) => {
+            promises.push(removeElement(el, className));
+        });
+        return Promise.all(promises);
+    }
+    return removeElement(element, className);
 }

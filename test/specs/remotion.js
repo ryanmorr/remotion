@@ -119,4 +119,73 @@ describe('remotion', () => {
             done();
         });
     });
+
+    it('should transition and remove multiple elements', (done) => {
+        for (let i = 0; i < 3; i++) {
+            const el = document.createElement('div');
+            el.classList.add('box', 'transition-fade');
+            document.body.appendChild(el);
+        }
+
+        const elements = document.querySelectorAll('.box');
+
+        const promise = remotion(elements, 'transition-fade-out');
+
+        expect(promise).to.be.a('promise');
+        expect(elements[0].classList.contains('transition-fade-out')).to.equal(true);
+        expect(elements[1].classList.contains('transition-fade-out')).to.equal(true);
+        expect(elements[2].classList.contains('transition-fade-out')).to.equal(true);
+
+        promise.then((els) => {
+            expect(els).to.deep.equal(Array.from(elements));
+            expect(document.contains(elements[0])).to.equal(false);
+            expect(document.contains(elements[1])).to.equal(false);
+            expect(document.contains(elements[2])).to.equal(false);
+            expect(elements[0].classList.contains('transition-fade-out')).to.equal(false);
+            expect(elements[1].classList.contains('transition-fade-out')).to.equal(false);
+            expect(elements[2].classList.contains('transition-fade-out')).to.equal(false);
+            done();
+        });
+
+        elements[0].dispatchEvent(new Event('transitionend'));
+        elements[1].dispatchEvent(new Event('transitioncancel'));
+        elements[2].dispatchEvent(new Event('transitionend'));
+    });
+
+    it('should animate and remove multiple elements with a callback function', (done) => {
+        for (let i = 0; i < 3; i++) {
+            const el = document.createElement('div');
+            el.classList.add('box');
+            document.body.appendChild(el);
+        }
+
+        const spy = sinon.spy(() => 'animation-fade-out');
+        const elements = document.querySelectorAll('.box');
+
+        const promise = remotion('.box', spy);
+
+        expect(spy.callCount).to.equal(3);
+        expect(spy.args[0][0]).to.equal(elements[0]);
+        expect(spy.args[1][0]).to.equal(elements[1]);
+        expect(spy.args[2][0]).to.equal(elements[2]);
+
+        expect(elements[0].classList.contains('animation-fade-out')).to.equal(true);
+        expect(elements[1].classList.contains('animation-fade-out')).to.equal(true);
+        expect(elements[2].classList.contains('animation-fade-out')).to.equal(true);
+
+        promise.then((els) => {
+            expect(els).to.deep.equal(Array.from(elements));
+            expect(document.contains(elements[0])).to.equal(false);
+            expect(document.contains(elements[1])).to.equal(false);
+            expect(document.contains(elements[2])).to.equal(false);
+            expect(elements[0].classList.contains('animation-fade-out')).to.equal(false);
+            expect(elements[1].classList.contains('animation-fade-out')).to.equal(false);
+            expect(elements[2].classList.contains('animation-fade-out')).to.equal(false);
+            done();
+        });
+
+        elements[0].dispatchEvent(new Event('animationend'));
+        elements[1].dispatchEvent(new Event('animationcancel'));
+        elements[2].dispatchEvent(new Event('animationend'));
+    });
 });
