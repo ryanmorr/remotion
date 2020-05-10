@@ -29,6 +29,18 @@ describe('remotion', () => {
         document.body.appendChild(element);
     });
 
+    it('should remove an element', (done) => {
+        const promise = remotion(element);
+
+        expect(promise).to.be.a('promise');
+        expect(document.contains(element)).to.equal(false);
+
+        promise.then((el) => {
+            expect(el).to.equal(element);
+            done();
+        });
+    });
+
     it('should transition an element before removing it from the DOM', (done) => {
         element.classList.add('transition-fade');
 
@@ -105,6 +117,27 @@ describe('remotion', () => {
         promise.then((el) => {
             expect(el).to.equal(element);
             expect(document.contains(element)).to.equal(false);
+            done();
+        });
+    });
+
+    it('should remove multiple elements', (done) => {
+        const elements = [];
+        for (let i = 0; i < 3; i++) {
+            const el = document.createElement('div');
+            document.body.appendChild(el);
+            elements.push(el);
+        }
+
+        const promise = remotion(elements);
+
+        expect(promise).to.be.a('promise');
+        expect(document.contains(elements[0])).to.equal(false);
+        expect(document.contains(elements[1])).to.equal(false);
+        expect(document.contains(elements[2])).to.equal(false);
+
+        promise.then((els) => {
+            expect(els).to.deep.equal(Array.from(elements));
             done();
         });
     });

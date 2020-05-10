@@ -1,4 +1,8 @@
 function removeElement(element, className) {
+    if (typeof className === 'undefined') {
+        element.remove();
+        return Promise.resolve(element);
+    }
     if (typeof className === 'function') {
         if (className.length === 2) {
             return new Promise((resolve) => className(element, () => {
