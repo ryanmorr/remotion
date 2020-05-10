@@ -32,9 +32,6 @@ export default function remotion(element, className) {
         element = document.querySelectorAll(element);
     }
     if (typeof element.length === 'number') {
-        if (element.length === 1) {
-            return removeElement(element[0], className);
-        }
         return Promise.all(Array.from(element).map((el) => removeElement(el, className)));
     }
     return removeElement(element, className);

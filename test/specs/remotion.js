@@ -47,17 +47,6 @@ describe('remotion', () => {
         element.dispatchEvent(new Event('transitionend'));
     });
 
-    it('should support selector strings', (done) => {
-        element.classList.add('foo', 'transition-fade');
-
-        remotion('.foo', 'transition-fade-out').then(() => {
-            expect(document.contains(element)).to.equal(false);
-            done();
-        });
-
-        element.dispatchEvent(new Event('transitionend'));
-    });
-
     it('should remove the element when a transition is canceled', (done) => {
         element.classList.add('transition-fade');
 
