@@ -188,4 +188,20 @@ describe('remotion', () => {
         elements[1].dispatchEvent(new Event('animationcancel'));
         elements[2].dispatchEvent(new Event('animationend'));
     });
+
+    it('should allow an element to be re-used', (done) => {
+        element.classList.add('transition-fade');
+
+        remotion(element, 'transition-fade-out').then(() => {
+            document.body.appendChild(element);
+            element.addEventListener('animationend', () => {
+                expect(document.contains(element)).to.equal(true);
+                expect(element.classList.contains('animation-fade-out')).to.equal(true);
+                done();
+            });
+            element.classList.add('animation-fade-out');
+        });
+
+        element.dispatchEvent(new Event('transitionend'));
+    });
 });
