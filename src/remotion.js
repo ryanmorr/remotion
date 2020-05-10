@@ -1,42 +1,42 @@
-function removeElement(element, className) {
-    if (typeof className === 'undefined') {
+function removeElement(element, value) {
+    if (typeof value === 'undefined') {
         element.remove();
         return Promise.resolve(element);
     }
-    if (typeof className === 'function') {
-        if (className.length === 2) {
-            return new Promise((resolve) => className(element, () => {
+    if (typeof value === 'function') {
+        if (value.length === 2) {
+            return new Promise((resolve) => value(element, () => {
                 element.remove();
                 resolve(element);
             }));
         }
-        className = className(element);
+        value = value(element);
     }
     return new Promise((resolve) => {
-        const onEnd = () => {
-            element.classList.remove(className);
-            element.removeEventListener('transitionend', onEnd);
-            element.removeEventListener('transitioncancel', onEnd);
-            element.removeEventListener('animationend', onEnd);
-            element.removeEventListener('animationcancel', onEnd);
+        const onEvent = () => {
+            element.classList.remove(value);
+            element.removeEventListener('transitionend', onEvent);
+            element.removeEventListener('transitioncancel', onEvent);
+            element.removeEventListener('animationend', onEvent);
+            element.removeEventListener('animationcancel', onEvent);
             element.remove();
             resolve(element);
         };
-        element.addEventListener('transitionend', onEnd);
-        element.addEventListener('transitioncancel', onEnd);
-        element.addEventListener('animationend', onEnd);
-        element.addEventListener('animationcancel', onEnd);
-        element.classList.add(className);
+        element.addEventListener('transitionend', onEvent);
+        element.addEventListener('transitioncancel', onEvent);
+        element.addEventListener('animationend', onEvent);
+        element.addEventListener('animationcancel', onEvent);
+        element.classList.add(value);
         void element.offsetWidth;
     });
 }
 
-export default function remotion(element, className) {
+export default function remotion(element, value) {
     if (typeof element === 'string') {
         element = document.querySelectorAll(element);
     }
     if (typeof element.length === 'number') {
-        return Promise.all(Array.from(element).map((el) => removeElement(el, className)));
+        return Promise.all(Array.from(element).map((el) => removeElement(el, value)));
     }
-    return removeElement(element, className);
+    return removeElement(element, value);
 }
