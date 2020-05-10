@@ -32,11 +32,7 @@ export default function remotion(element, className) {
         if (element.length === 1) {
             return removeElement(element[0], className);
         }
-        const promises = [];
-        element.forEach((el) => {
-            promises.push(removeElement(el, className));
-        });
-        return Promise.all(promises);
+        return Promise.all(Array.from(element).map((el) => removeElement(el, className)));
     }
     return removeElement(element, className);
 }
