@@ -6,7 +6,9 @@ function removeElement(element, value) {
     if (typeof value === 'function') {
         if (value.length === 2) {
             return new Promise((resolve) => value(element, () => {
-                element.remove();
+                if (element.parentNode) {
+                    element.remove();
+                }
                 resolve(element);
             }));
         }

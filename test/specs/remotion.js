@@ -121,6 +121,22 @@ describe('remotion', () => {
         });
     });
 
+    it('should allow the custom function to remove the element', (done) => {
+        const promise = remotion(element, (el, done) => {
+            setTimeout(() => {
+                el.remove();
+                setTimeout(done, 500);
+            }, 500);
+        });
+
+        expect(document.contains(element)).to.equal(true);
+        
+        promise.then(() => {
+            expect(document.contains(element)).to.equal(false);
+            done();
+        });
+    });
+
     it('should remove multiple elements', (done) => {
         const elements = [];
         for (let i = 0; i < 3; i++) {
