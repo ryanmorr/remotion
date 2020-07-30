@@ -4,7 +4,7 @@
 [![Build Status][build-image]][build-url]
 [![License][license-image]][license-url]
 
-> Transition an element out before removing it from the DOM
+> Animate elements before removing them from the DOM
 
 ## Install
 

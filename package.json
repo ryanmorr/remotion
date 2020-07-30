@@ -1,6 +1,6 @@
 {
   "name": "@ryanmorr/remotion",
-  "description": "Transition an element out before removing it from the DOM",
+  "description": "Animate elements before removing them from the DOM",
   "version": "0.1.0",
   "license": "Unlicense",
   "author": "Ryan Morr",
