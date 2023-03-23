@@ -4,15 +4,15 @@ function removeElement(element, value) {
         return Promise.resolve(element);
     }
     if (typeof value === 'function') {
-        if (value.length === 2) {
-            return new Promise((resolve) => value(element, () => {
+        value = value(element);
+        if (value && typeof value.then === 'function') {
+            value.then(() => {
                 if (element.parentNode) {
                     element.remove();
                 }
-                resolve(element);
-            }));
+            });
+            return new Promise((resolve) => value.then(() => resolve(element)));
         }
-        value = value(element);
     }
     return new Promise((resolve) => {
         const onEvent = () => {
