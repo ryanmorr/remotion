@@ -41,7 +41,7 @@ describe('remotion', () => {
         });
     });
 
-    it('should transition an element before removing it from the DOM', (done) => {
+    it('should transition an element before removing it from the DOM', async () => {
         element.classList.add('transition-fade');
 
         const promise = remotion(element, 'transition-fade-out');
@@ -50,34 +50,13 @@ describe('remotion', () => {
         expect(document.contains(element)).to.equal(true);
         expect(element.classList.contains('transition-fade-out')).to.equal(true);
 
-        promise.then((el) => {
-            expect(el).to.equal(element);
-            expect(document.contains(element)).to.equal(false);
-            expect(element.classList.contains('transition-fade-out')).to.equal(false);
-            done();
-        });
-
         element.dispatchEvent(new Event('transitionend'));
-    });
 
-    it('should remove the element when a transition is canceled', (done) => {
-        element.classList.add('transition-fade');
-
-        remotion(element, 'transition-fade-out').then(() => {
-            expect(document.contains(element)).to.equal(false);
-            done();
-        });
-
-        element.dispatchEvent(new Event('transitioncancel'));
-    });
-
-    it('should animate an element before removing it from the DOM', (done) => {
-        remotion(element, 'animation-fade-out').then(() => {
-            expect(document.contains(element)).to.equal(false);
-            done();
-        });
-
-        element.dispatchEvent(new Event('animationend'));
+        const el = await promise;
+        
+        expect(el).to.equal(element);
+        expect(document.contains(element)).to.equal(false);
+        expect(element.classList.contains('transition-fade-out')).to.equal(false);
     });
 
     it('should remove the element when an animation is canceled', (done) => {
@@ -89,7 +68,24 @@ describe('remotion', () => {
         element.dispatchEvent(new Event('animationcancel'));
     });
 
-    it('should support a callback function as a second argument that returns a class name', (done) => {
+    it('should animate an element before removing it from the DOM', async () => {
+        element.dispatchEvent(new Event('animationend'));
+
+        await remotion(element, 'animation-fade-out');
+
+        expect(document.contains(element)).to.equal(false);
+    });
+
+    it('should remove the element when an animation is canceled', (done) => {
+        remotion(element, 'animation-fade-out').then(() => {
+            expect(document.contains(element)).to.equal(false);
+            done();
+        });
+
+        element.dispatchEvent(new Event('animationcancel'));
+    });
+
+    it('should support a callback function as a second argument that returns a class name', async () => {
         element.classList.add('transition-fade');
 
         const promise = remotion(element, (el) => {
@@ -99,15 +95,14 @@ describe('remotion', () => {
 
         expect(element.classList.contains('transition-fade-out')).to.equal(true);
         
-        promise.then(() => {
-            expect(document.contains(element)).to.equal(false);
-            done();
-        });
-
         element.dispatchEvent(new Event('transitionend'));
+
+        await promise;
+
+        expect(document.contains(element)).to.equal(false);
     });
 
-    it('should remove multiple elements', (done) => {
+    it('should remove multiple elements', async () => {
         const elements = [];
         for (let i = 0; i < 3; i++) {
             const el = document.createElement('div');
@@ -122,13 +117,12 @@ describe('remotion', () => {
         expect(document.contains(elements[1])).to.equal(false);
         expect(document.contains(elements[2])).to.equal(false);
 
-        promise.then((els) => {
-            expect(els).to.deep.equal(Array.from(elements));
-            done();
-        });
+        const els = await promise;
+
+        expect(els).to.deep.equal(Array.from(elements));
     });
 
-    it('should transition and remove multiple elements', (done) => {
+    it('should transition and remove multiple elements', async () => {
         for (let i = 0; i < 3; i++) {
             const el = document.createElement('div');
             el.classList.add('box', 'transition-fade');
@@ -144,23 +138,22 @@ describe('remotion', () => {
         expect(elements[1].classList.contains('transition-fade-out')).to.equal(true);
         expect(elements[2].classList.contains('transition-fade-out')).to.equal(true);
 
-        promise.then((els) => {
-            expect(els).to.deep.equal(Array.from(elements));
-            expect(document.contains(elements[0])).to.equal(false);
-            expect(document.contains(elements[1])).to.equal(false);
-            expect(document.contains(elements[2])).to.equal(false);
-            expect(elements[0].classList.contains('transition-fade-out')).to.equal(false);
-            expect(elements[1].classList.contains('transition-fade-out')).to.equal(false);
-            expect(elements[2].classList.contains('transition-fade-out')).to.equal(false);
-            done();
-        });
-
         elements[0].dispatchEvent(new Event('transitionend'));
         elements[1].dispatchEvent(new Event('transitioncancel'));
         elements[2].dispatchEvent(new Event('transitionend'));
+
+        const els = await promise;
+
+        expect(els).to.deep.equal(Array.from(elements));
+        expect(document.contains(elements[0])).to.equal(false);
+        expect(document.contains(elements[1])).to.equal(false);
+        expect(document.contains(elements[2])).to.equal(false);
+        expect(elements[0].classList.contains('transition-fade-out')).to.equal(false);
+        expect(elements[1].classList.contains('transition-fade-out')).to.equal(false);
+        expect(elements[2].classList.contains('transition-fade-out')).to.equal(false);
     });
 
-    it('should animate and remove multiple elements with a callback function', (done) => {
+    it('should animate and remove multiple elements with a callback function', async () => {
         for (let i = 0; i < 3; i++) {
             const el = document.createElement('div');
             el.classList.add('box');
@@ -181,23 +174,22 @@ describe('remotion', () => {
         expect(elements[1].classList.contains('animation-fade-out')).to.equal(true);
         expect(elements[2].classList.contains('animation-fade-out')).to.equal(true);
 
-        promise.then((els) => {
-            expect(els).to.deep.equal(Array.from(elements));
-            expect(document.contains(elements[0])).to.equal(false);
-            expect(document.contains(elements[1])).to.equal(false);
-            expect(document.contains(elements[2])).to.equal(false);
-            expect(elements[0].classList.contains('animation-fade-out')).to.equal(false);
-            expect(elements[1].classList.contains('animation-fade-out')).to.equal(false);
-            expect(elements[2].classList.contains('animation-fade-out')).to.equal(false);
-            done();
-        });
-
         elements[0].dispatchEvent(new Event('animationend'));
         elements[1].dispatchEvent(new Event('animationcancel'));
         elements[2].dispatchEvent(new Event('animationend'));
+
+        const els = await promise;
+
+        expect(els).to.deep.equal(Array.from(elements));
+        expect(document.contains(elements[0])).to.equal(false);
+        expect(document.contains(elements[1])).to.equal(false);
+        expect(document.contains(elements[2])).to.equal(false);
+        expect(elements[0].classList.contains('animation-fade-out')).to.equal(false);
+        expect(elements[1].classList.contains('animation-fade-out')).to.equal(false);
+        expect(elements[2].classList.contains('animation-fade-out')).to.equal(false);
     });
 
-    it('should support returning a promise from the callback function to customize when an element is removed', (done) => {
+    it('should support returning a promise from the callback function to customize when an element is removed', async () => {
         const promise = remotion(element, (el) => {
             expect(el).to.equal(element);
             return new Promise((resolve) => {
@@ -207,14 +199,13 @@ describe('remotion', () => {
 
         expect(document.contains(element)).to.equal(true);
         
-        promise.then((el) => {
-            expect(el).to.equal(element);
-            expect(document.contains(element)).to.equal(false);
-            done();
-        });
+        const el = await promise;
+
+        expect(el).to.equal(element);
+        expect(document.contains(element)).to.equal(false);
     });
 
-    it('should allow the custom function to remove the element', (done) => {
+    it('should allow the custom function to remove the element', async () => {
         const promise = remotion(element, (el) => {
             return new Promise((resolve) => {
                 setTimeout(() => {
@@ -226,13 +217,12 @@ describe('remotion', () => {
 
         expect(document.contains(element)).to.equal(true);
         
-        promise.then(() => {
-            expect(document.contains(element)).to.equal(false);
-            done();
-        });
+        await promise;
+
+        expect(document.contains(element)).to.equal(false);
     });
 
-    it('should animate and remove multiple elements with a callback function that returns a promise', (done) => {
+    it('should animate and remove multiple elements with a callback function that returns a promise', async () => {
         for (let i = 0; i < 3; i++) {
             const el = document.createElement('div');
             el.classList.add('box');
@@ -249,13 +239,12 @@ describe('remotion', () => {
         expect(spy.args[1][0]).to.equal(elements[1]);
         expect(spy.args[2][0]).to.equal(elements[2]);
 
-        promise.then((els) => {
-            expect(els).to.deep.equal(Array.from(elements));
-            expect(document.contains(elements[0])).to.equal(false);
-            expect(document.contains(elements[1])).to.equal(false);
-            expect(document.contains(elements[2])).to.equal(false);
-            done();
-        });
+        const els = await promise;
+
+        expect(els).to.deep.equal(Array.from(elements));
+        expect(document.contains(elements[0])).to.equal(false);
+        expect(document.contains(elements[1])).to.equal(false);
+        expect(document.contains(elements[2])).to.equal(false);
     });
 
     it('should allow an element to be re-used', (done) => {
