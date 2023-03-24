@@ -1,14 +1,14 @@
 # remotion
 
 [![Version Badge][version-image]][project-url]
-[![Build Status][build-image]][build-url]
 [![License][license-image]][license-url]
+[![Build Status][build-image]][build-url]
 
 > Animate elements before removing them from the DOM
 
 ## Install
 
-Download the [CJS](https://github.com/ryanmorr/remotion/raw/master/dist/remotion.cjs.js), [ESM](https://github.com/ryanmorr/remotion/raw/master/dist/remotion.esm.js), [UMD](https://github.com/ryanmorr/remotion/raw/master/dist/remotion.umd.js) versions or install via NPM:
+Download the [CJS](https://github.com/ryanmorr/remotion/raw/master/dist/cjs/remotion.js), [ESM](https://github.com/ryanmorr/remotion/raw/master/dist/esm/remotion.js), [UMD](https://github.com/ryanmorr/remotion/raw/master/dist/umd/remotion.js) versions or install via NPM:
 
 ```sh
 npm install @ryanmorr/remotion
@@ -34,10 +34,18 @@ Supports a function as the second argument that is provided the element referenc
 remotion('.item', (element) => 'fade-out');
 ```
 
-If the function defines a second parameter, the function can now be used to fully customize the removal process. The second parameter is a function to call when finished to remove the element from the DOM and resolve the promise:
+If the function returns a promise, it can now be used to fully customize the removal process. You can perform a custom animation, execute side effects, and/or explicitly remove the element from the DOM yourself, then simply resolve the promise when your done:
 
 ```javascript
-remotion(nodelist, (element, done) => fadeOut(element).then(done));
+remotion(nodelist, (element) => {
+    return new Promise((resolve) => {
+        fadeOut(element).then(() => {
+            executeSideEffect(element);
+            element.remove();
+            resolve();
+        });
+    });
+});
 ```
 
 ## License
@@ -45,8 +53,8 @@ remotion(nodelist, (element, done) => fadeOut(element).then(done));
 This project is dedicated to the public domain as described by the [Unlicense](http://unlicense.org/).
 
 [project-url]: https://github.com/ryanmorr/remotion
-[version-image]: https://badge.fury.io/gh/ryanmorr%2Fremotion.svg
-[build-url]: https://travis-ci.org/ryanmorr/remotion
-[build-image]: https://travis-ci.org/ryanmorr/remotion.svg
-[license-image]: https://img.shields.io/badge/license-Unlicense-blue.svg
+[version-image]: https://img.shields.io/github/package-json/v/ryanmorr/remotion?color=blue&style=flat-square
+[build-url]: https://github.com/ryanmorr/remotion/actions
+[build-image]: https://img.shields.io/github/actions/workflow/status/ryanmorr/remotion/node.js.yml?style=flat-square
+[license-image]: https://img.shields.io/github/license/ryanmorr/remotion?color=blue&style=flat-square
 [license-url]: UNLICENSE
