@@ -5,8 +5,11 @@
   "license": "Unlicense",
   "author": "Ryan Morr",
   "homepage": "https://github.com/ryanmorr/remotion",
-  "repository": "github:ryanmorr/remotion",
   "bugs": "https://github.com/ryanmorr/remotion/issues",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ryanmorr/remotion.git"
+  },
   "keywords": [
     "javascript",
     "dom",
