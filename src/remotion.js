@@ -5,13 +5,13 @@ function removeElement(element, value) {
     }
     if (typeof value === 'function') {
         value = value(element);
-        if (value && typeof value.then === 'function') {
-            value.then(() => {
+        if (value instanceof Promise) {
+            return value.then(() => {
                 if (element.parentNode) {
                     element.remove();
                 }
+                return element;
             });
-            return new Promise((resolve) => value.then(() => resolve(element)));
         }
     }
     return new Promise((resolve) => {
