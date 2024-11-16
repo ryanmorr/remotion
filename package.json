@@ -1,7 +1,7 @@
 {
   "name": "@ryanmorr/remotion",
   "description": "Animate elements before removing them from the DOM",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "license": "Unlicense",
   "author": "Ryan Morr",
   "homepage": "https://github.com/ryanmorr/remotion",
